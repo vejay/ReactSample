@@ -4,6 +4,7 @@ import './bootstrap.min.css';
 import PropTypes from 'prop-types';
 import Form from 'react-jsonschema-form';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 const Hero = () => {
   return (
@@ -144,7 +145,26 @@ class JsonIdentityForm extends React.Component {
     }
 };
 
-const AuthorQuiz = ({turnData, highlight, onAnswerSelected}) => {
+const mapStateToProps =  (state) => {
+    return {
+        turnData: state.turnData,
+        highlight: state.highlight
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onAnswerSelected: (answer) => {
+            dispatch({type: 'ANSWER_SELECTED', answer: answer});
+        },
+        onContinue: () => {
+            dispatch({type: 'CONTINUE'})
+        }
+    }
+};
+
+const AuthorQuiz = connect(mapStateToProps, mapDispatchToProps)(
+    ({turnData, highlight, onAnswerSelected}) => {
     return (
         <div className="container-fluid">
             <Hero/>
@@ -157,6 +177,6 @@ const AuthorQuiz = ({turnData, highlight, onAnswerSelected}) => {
             <JsonIdentityForm />
         </div>
     );
-};
+});
 
 export default AuthorQuiz;

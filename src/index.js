@@ -5,6 +5,12 @@ import AuthorQuiz from './AuthorQuiz';
 import * as serviceWorker from './serviceWorker';
 import {shuffle, sample} from 'underscore';
 import {BrowserRouter, Route} from 'react-router-dom';
+import {createStore} from 'redux';
+import mapStateToProps from "react-redux/es/connect/mapStateToProps";
+import mapDispatchToProps from "react-redux/es/connect/mapDispatchToProps";
+import * as Redux from 'redux';
+import * as ReactRedux from 'react-redux';
+
 
 const authors = [
     {
@@ -61,21 +67,11 @@ const randomTurnData = () => {
         }
 };
 
-const state = {
-    turnData: randomTurnData(),
-    highlight: ''
-};
-
-const onAnswerSelected = (answer) => {
-    const isCorrect = state.turnData.author.books.some((book) => book === answer);
-    state.highlight =  isCorrect ? 'correct' : 'wrong';
-    //Important : Need to call render()
-    render();
-};
-
 const App = () => {
     return (
-        <AuthorQuiz {...state} onAnswerSelected={onAnswerSelected} />
+        <ReactRedux.Provider store={store}>
+            <AuthorQuiz />
+        </ReactRedux.Provider>
     );
 };
 
@@ -87,6 +83,24 @@ const AddAuthorForm = ({match}) => {
         </div>
     )
 };
+
+const reducer = (state = {authors, turnData: randomTurnData(authors), highlight: ''}, action) => {
+    switch(action.type) {
+        case 'ANSWER_SELECTED':
+            console.log(JSON.stringify(action));
+            const isCorrect = state.turnData.author.books.some((book) => book === action.answer);
+            return Object.assign({}, state, {highlight: isCorrect ? 'correct': 'wrong'});
+        case 'CONTINUE':
+            return Object.assign({},state, {
+                    highlight: '',
+                    turnData: randomTurnData()
+            });
+        default:
+            return state;
+    }
+};
+
+let store = Redux.createStore(reducer);
 
 function render() {
     ReactDOM.render(
@@ -100,6 +114,7 @@ function render() {
 }
 
 render();
+
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA

@@ -27,7 +27,9 @@
     "enzyme-adapter-react-16": "^1.7.1",
     "prop-types": "^15.6.2",
     "react-jsonschema-form": "^1.0.6",
+    "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
+    "redux": "^4.0.1",
     "underscore": "^1.9.1"
   }
 }

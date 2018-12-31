@@ -100,7 +100,9 @@ const reducer = (state = {authors, turnData: randomTurnData(authors), highlight:
     }
 };
 
-let store = Redux.createStore(reducer);
+let store = Redux.createStore(reducer,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
 
 function render() {
     ReactDOM.render(
